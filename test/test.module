@@ -1,0 +1,19 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function test_user_update(EntityInterface $entity) {
+  $nids = \Drupal::entityQuery('node')
+    ->condition('type', 'article')
+    ->condition('uid', $entity->id())
+    ->execute();
+  $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+  foreach ($nodes as $node_content) {
+    $title = $node_content->getTitle();
+    \Drupal::logger('test')->info($title);
+  }
+}
